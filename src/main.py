@@ -109,6 +109,9 @@ if __name__ == '__main__':
         results_df['date_saturday'] = pd.to_datetime(results_df['date_saturday'])
         results_df['event_count'] = results_df['event_count'].astype(int)
     
+    print('Saturdays data:')
+    print(results_df)
+    
     logging.info(f'checking for availability between {start_date} and {end_date}...')
     alert_message = check_for_availability(results_df, start_date, end_date)
     
