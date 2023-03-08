@@ -77,7 +77,7 @@ if __name__ == '__main__':
 ########################
     
     # configure logging
-    logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logging.basicConfig(filename='app.log', filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logging.info('Logging configured for session')
     
 ########################
@@ -97,6 +97,7 @@ if __name__ == '__main__':
     start_date = '2024-05-01'
     end_date = '2024-10-31'
 
+    print(f'[{str(datetime.datetime.now())}]: getting Wadsworth 2024 calendar information...')
     logging.info('getting Wadsworth 2024 calendar information...')
     for month in generate_month_list('2024-01','2024-12'):
         
@@ -109,19 +110,23 @@ if __name__ == '__main__':
         results_df['date_saturday'] = pd.to_datetime(results_df['date_saturday'])
         results_df['event_count'] = results_df['event_count'].astype(int)
     
-    print('Saturdays data:')
+    print(f'[{str(datetime.datetime.now())}]: Saturdays data:')
     print(results_df)
     
+    print(f'[{str(datetime.datetime.now())}]: Checking for availability between {start_date} and {end_date}')
     logging.info(f'checking for availability between {start_date} and {end_date}...')
     alert_message = check_for_availability(results_df, start_date, end_date)
     
     if alert_message:
+        print(f'[{str(datetime.datetime.now())}]: NEW AVAILABILITIES FOUND!')
         logging.info('NEW AVAILABILITIES FOUND!')
         send_email(results_df, alert_message, sender, password)
     else: 
+        print(f'[{str(datetime.datetime.now())}]: no availabilities found between specified dates')
         logging.info('no availabilities found between specified dates')
     
     end_time = time.perf_counter()
     total_time = end_time - begin_time 
+    print(f'[{str(datetime.datetime.now())}]: script completed in {total_time:0.6f} seconds')
     logging.info(f'script completed in {total_time:0.6f} seconds')
     
